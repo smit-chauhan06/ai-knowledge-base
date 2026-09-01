@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import User from "models/User";
-import { error } from "node:console";
 import { verifyToken } from "utils/jwt";
 
 export const authMiddleware = async (
@@ -11,7 +10,7 @@ export const authMiddleware = async (
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer")) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       res.status(401).json({
         error: "No token provided",
       });
@@ -23,7 +22,7 @@ export const authMiddleware = async (
 
     const user = await User.findById(payload.userId);
     if (!user) {
-      res.status(401).json({ error: "User no longer exsits" });
+      res.status(401).json({ error: "User no longer exists" });
       return;
     }
 
