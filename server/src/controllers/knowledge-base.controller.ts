@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { createKnowledgeBase } from "services/knowledge-base.service";
+import {
+  createKnowledgeBase,
+  getKnowledgeBases,
+} from "services/knowledge-base.service";
 
 export const addKnowledgeBase = async (req: Request, res: Response) => {
   try {
@@ -24,5 +27,27 @@ export const addKnowledgeBase = async (req: Request, res: Response) => {
       error instanceof Error ? error.message : "Knowledge Base creation failed";
 
     res.status(400).json({ error: message });
+  }
+};
+
+export const getAllKnowledgeBases = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        error: "Unauthorized",
+      });
+      return;
+    }
+
+    const knowledgeBases = await getKnowledgeBases(req.user.id);
+
+    res.status(200).json(knowledgeBases);
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch knowledge bases";
+
+    res.status(500).json({ error: message });
   }
 };

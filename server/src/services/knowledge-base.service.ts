@@ -18,4 +18,10 @@ const createKnowledgeBase = async ({
   });
 };
 
-export { createKnowledgeBase };
+const getKnowledgeBases = async (userId: string) => {
+  return KnowledgeBase.find({
+    owner: userId,
+  });
+};
+
+export { createKnowledgeBase, getKnowledgeBases };
