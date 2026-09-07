@@ -24,4 +24,14 @@ const getKnowledgeBases = async (userId: string) => {
   });
 };
 
-export { createKnowledgeBase, getKnowledgeBases };
+const getKnowledgeBaseById = async (
+  knowledgeBaseId: string,
+  ownerId: string,
+) => {
+  return KnowledgeBase.findOne({
+    _id: knowledgeBaseId,
+    owner: ownerId,
+  });
+};
+
+export { createKnowledgeBase, getKnowledgeBases, getKnowledgeBaseById };
