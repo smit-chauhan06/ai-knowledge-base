@@ -3,20 +3,33 @@ import { z } from "zod";
 
 const knowledgeBaseIdSchema = z.object({
   params: z.object({
-    id: z.string().refine(
-      (id) => mongoose.isValidObjectId(id),
-      {
-        message: "Invalid knowledge base ID",
-      },
-    ),
+    id: z.string().refine((id) => mongoose.isValidObjectId(id), {
+      message: "Invalid knowledge base ID",
+    }),
   }),
 });
 
-const knowledgeBaseSchema=z.object({
-    body:z.object({
-        name:z.string().min(1,"Name is required").max(100),
-        description:z.string().max(500).optional()
-    })
-})
+const knowledgeBaseSchema = z.object({
+  body: z.object({
+    name: z.string().min(1, "Name is required").max(100),
+    description: z.string().max(500).optional(),
+  }),
+});
 
-export {knowledgeBaseIdSchema, knowledgeBaseSchema}
+const updateKnowledgeBaseSchema = z.object({
+  params: z.object({
+    id: z.string().refine((id) => mongoose.isValidObjectId(id), {
+      message: "Invalid knowledge base ID",
+    }),
+  }),
+  body: z.object({
+    name: z.string().min(1, "Name is required").max(100).optional(),
+    description: z.string().max(500).optional(),
+  }),
+});
+
+export {
+  knowledgeBaseIdSchema,
+  knowledgeBaseSchema,
+  updateKnowledgeBaseSchema,
+};

@@ -6,6 +6,11 @@ interface CreateKnowledgeBaseInput {
   ownerId: string;
 }
 
+interface UpdateKnowledgeBaseInput {
+  name?: string;
+  description?: string;
+}
+
 const createKnowledgeBase = async ({
   name,
   description,
@@ -34,4 +39,28 @@ const getKnowledgeBaseById = async (
   });
 };
 
-export { createKnowledgeBase, getKnowledgeBases, getKnowledgeBaseById };
+const updateKnowledgeBase = async (
+  knowledgeBaseId: string,
+  ownerId: string,
+  data: UpdateKnowledgeBaseInput,
+) => {
+  return KnowledgeBase.findOneAndUpdate(
+    {
+      _id: knowledgeBaseId,
+      owner: ownerId,
+    },
+    {
+      $set: data,
+    },
+    {
+      new: true,
+    },
+  );
+};
+
+export {
+  createKnowledgeBase,
+  getKnowledgeBases,
+  getKnowledgeBaseById,
+  updateKnowledgeBase,
+};

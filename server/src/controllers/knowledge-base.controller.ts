@@ -3,7 +3,12 @@ import {
   createKnowledgeBase,
   getKnowledgeBaseById,
   getKnowledgeBases,
+  updateKnowledgeBase,
 } from "services/knowledge-base.service";
+
+interface KnowledgeBaseParams {
+  id: string;
+}
 
 export const addKnowledgeBase = async (req: Request, res: Response) => {
   try {
@@ -64,6 +69,13 @@ export const getKnowledgeBaseDataById = async (req: Request, res: Response) => {
       return;
     }
 
+    if (typeof id !== "string") {
+      res.status(400).json({
+        error: "Invalid knowledge base ID",
+      });
+      return;
+    }
+
     const knowledgeBase = await getKnowledgeBaseById(id, req.user.id);
     if (!knowledgeBase) {
       res.status(404).json({
@@ -78,5 +90,47 @@ export const getKnowledgeBaseDataById = async (req: Request, res: Response) => {
       error instanceof Error ? error.message : "Failed to fetch knowledge base";
 
     res.status(500).json({ error: message });
+  }
+};
+
+export const updateKnowledgeBaseData = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, description } = req.body;
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        error: "Unauthorized",
+      });
+      return;
+    }
+
+    if (typeof id !== "string") {
+      res.status(400).json({
+        error: "Invalid knowledge base ID",
+      });
+      return;
+    }
+
+    const knowledgeBase = await updateKnowledgeBase(id, req.user.id, {
+      name,
+      description,
+    });
+
+    if (!knowledgeBase) {
+      res.status(404).json({
+        error: "Knowledge base not found",
+      });
+      return;
+    }
+    res.status(200).json(knowledgeBase);
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Failed to update knowledge base";
+
+    res.status(500).json({
+      error: message,
+    });
   }
 };
