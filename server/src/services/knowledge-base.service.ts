@@ -58,9 +58,20 @@ const updateKnowledgeBase = async (
   );
 };
 
+const deleteKnowledgeBase = async (
+  KnowledgeBaseById: string,
+  ownerId: string,
+) => {
+  return KnowledgeBase.findOneAndDelete({
+    _id: KnowledgeBaseById,
+    owner: ownerId,
+  });
+};
+
 export {
   createKnowledgeBase,
   getKnowledgeBases,
   getKnowledgeBaseById,
   updateKnowledgeBase,
+  deleteKnowledgeBase,
 };

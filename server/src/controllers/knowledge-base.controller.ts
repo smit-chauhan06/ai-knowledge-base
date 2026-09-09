@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   createKnowledgeBase,
+  deleteKnowledgeBase,
   getKnowledgeBaseById,
   getKnowledgeBases,
   updateKnowledgeBase,
@@ -128,6 +129,48 @@ export const updateKnowledgeBaseData = async (req: Request, res: Response) => {
       error instanceof Error
         ? error.message
         : "Failed to update knowledge base";
+
+    res.status(500).json({
+      error: message,
+    });
+  }
+};
+
+export const deleteKnowledgeBaseData = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        error: "Unauthorized",
+      });
+      return;
+    }
+
+    if (typeof id !== "string") {
+      res.status(400).json({
+        error: "Invalid knowledge base ID",
+      });
+      return;
+    }
+
+    const knowledgeBase = await deleteKnowledgeBase(id, req.user.id);
+
+    if (!knowledgeBase) {
+      res.status(404).json({
+        error: "Knowledge base not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Knowledge base deleted successfully",
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Failed to delete knowledge base";
 
     res.status(500).json({
       error: message,

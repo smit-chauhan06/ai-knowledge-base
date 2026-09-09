@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addKnowledgeBase,
+  deleteKnowledgeBaseData,
   getAllKnowledgeBases,
   getKnowledgeBaseDataById,
   updateKnowledgeBaseData,
@@ -34,6 +35,13 @@ router.patch(
   authMiddleware,
   validate(updateKnowledgeBaseSchema),
   updateKnowledgeBaseData,
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  validate(knowledgeBaseIdSchema),
+  deleteKnowledgeBaseData,
 );
 
 export default router;
