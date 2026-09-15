@@ -28,8 +28,21 @@ const updateKnowledgeBaseSchema = z.object({
   }),
 });
 
+const knowledgeBaseDocumentIdSchema = z.object({
+  params: z.object({
+    id: z.string().refine((id) => mongoose.isValidObjectId(id), {
+      message: "Invalid knowledge base ID",
+    }),
+
+    doc_id: z.string().refine((id) => mongoose.isValidObjectId(id), {
+      message: "Invalid document ID",
+    }),
+  }),
+});
+
 export {
   knowledgeBaseIdSchema,
   knowledgeBaseSchema,
   updateKnowledgeBaseSchema,
+  knowledgeBaseDocumentIdSchema,
 };

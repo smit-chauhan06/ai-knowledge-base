@@ -1,5 +1,6 @@
 import {
   createDocument,
+  getDocumentById,
   getDocumentsByKnowledgeBase,
 } from "services/document.service";
 import { Request, Response } from "express";
@@ -48,6 +49,9 @@ export const uploadDocument = async (req: Request, res: Response) => {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "File upload failed";
+    res.status(500).json({
+      error: message,
+    });
   }
 };
 
@@ -63,6 +67,40 @@ export const getDocuments = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const documents = await getDocumentsByKnowledgeBase(id, req.user.id);
+
+    if (!documents) {
+      res.status(404).json({
+        error: "Knowledge base not found",
+      });
+      return;
+    }
+
+    res.status(200).json(documents);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch documents";
+    res.status(500).json({
+      error: message,
+    });
+  }
+};
+
+export const getKBDocumentById = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        error: "Unauthorized",
+      });
+      return;
+    }
+
+    const { id: knowledgeBaseId, doc_id: documentId } = req.params;
+
+    const documents = await getDocumentById(
+      knowledgeBaseId,
+      documentId,
+      req.user.id,
+    );
 
     if (!documents) {
       res.status(404).json({

@@ -13,8 +13,6 @@ import {
   updateKnowledgeBaseSchema,
 } from "validators/knowledge-base.validator";
 import { validate } from "middleware/validate";
-import { upload } from "middleware/upload";
-import { getDocuments, uploadDocument } from "controllers/document.controller";
 
 const router = Router();
 
@@ -44,21 +42,6 @@ router.delete(
   authMiddleware,
   validate(knowledgeBaseIdSchema),
   deleteKnowledgeBaseData,
-);
-
-router.post(
-  "/:id/documents",
-  authMiddleware,
-  validate(knowledgeBaseIdSchema),
-  upload.single("file"),
-  uploadDocument,
-);
-
-router.get(
-  "/:id/documents",
-  authMiddleware,
-  validate(knowledgeBaseIdSchema),
-  getDocuments,
 );
 
 export default router;

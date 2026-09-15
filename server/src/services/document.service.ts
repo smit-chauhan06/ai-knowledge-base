@@ -47,7 +47,7 @@ const getDocumentsByKnowledgeBase = async (
     owner: ownerId,
   });
 
-  if (!KnowledgeBase) {
+  if (!knowledgeBase) {
     return null;
   }
 
@@ -57,4 +57,25 @@ const getDocumentsByKnowledgeBase = async (
   });
 };
 
-export { createDocument, getDocumentsByKnowledgeBase };
+const getDocumentById = async (
+  knowledgeBaseId: string,
+  documentId: string,
+  ownerId: string,
+) => {
+  const knowledgeBase = await KnowledgeBase.findOne({
+    _id: knowledgeBaseId,
+    owner: ownerId,
+  });
+
+  if (!knowledgeBase) {
+    return null;
+  }
+
+  return DocumentModel.findOne({
+    _id: documentId,
+    knowledgeBase: knowledgeBaseId,
+    owner: ownerId,
+  });
+};
+
+export { createDocument, getDocumentsByKnowledgeBase, getDocumentById };
