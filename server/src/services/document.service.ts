@@ -38,4 +38,23 @@ const createDocument = async ({
   });
 };
 
-export { createDocument };
+const getDocumentsByKnowledgeBase = async (
+  knowledgeBaseId: string,
+  ownerId: string,
+) => {
+  const knowledgeBase = KnowledgeBase.findOne({
+    _id: knowledgeBaseId,
+    owner: ownerId,
+  });
+
+  if (!KnowledgeBase) {
+    return null;
+  }
+
+  return DocumentModel.find({
+    knowledgeBase: knowledgeBaseId,
+    owner: ownerId,
+  });
+};
+
+export { createDocument, getDocumentsByKnowledgeBase };

@@ -5,7 +5,6 @@ import {
   getAllKnowledgeBases,
   getKnowledgeBaseDataById,
   updateKnowledgeBaseData,
-  uploadDocument,
 } from "controllers/knowledge-base.controller";
 import { authMiddleware } from "middleware/auth";
 import {
@@ -15,6 +14,7 @@ import {
 } from "validators/knowledge-base.validator";
 import { validate } from "middleware/validate";
 import { upload } from "middleware/upload";
+import { getDocuments, uploadDocument } from "controllers/document.controller";
 
 const router = Router();
 
@@ -52,6 +52,13 @@ router.post(
   validate(knowledgeBaseIdSchema),
   upload.single("file"),
   uploadDocument,
+);
+
+router.get(
+  "/:id/documents",
+  authMiddleware,
+  validate(knowledgeBaseIdSchema),
+  getDocuments,
 );
 
 export default router;
