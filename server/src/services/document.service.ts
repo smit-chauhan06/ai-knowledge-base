@@ -78,4 +78,21 @@ const getDocumentById = async (
   });
 };
 
-export { createDocument, getDocumentsByKnowledgeBase, getDocumentById };
+const deleteDocument = async (
+  knowledgeBaseId: string,
+  documentId: string,
+  ownerId: string,
+) => {
+  return DocumentModel.findOneAndDelete({
+    _id: documentId,
+    knowledgeBase: knowledgeBaseId,
+    owner: ownerId,
+  });
+};
+
+export {
+  createDocument,
+  getDocumentsByKnowledgeBase,
+  getDocumentById,
+  deleteDocument,
+};

@@ -1,5 +1,6 @@
 import {
   createDocument,
+  deleteDocument,
   getDocumentById,
   getDocumentsByKnowledgeBase,
 } from "services/document.service";
@@ -113,6 +114,50 @@ export const getKBDocumentById = async (req: Request, res: Response) => {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to fetch documents";
+    res.status(500).json({
+      error: message,
+    });
+  }
+};
+
+export const deleteKBDocument = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        error: "Unauthorized",
+      });
+      return;
+    }
+
+    const { id: knowledgeBaseId, doc_id: documentId } = req.params;
+
+    if (typeof knowledgeBaseId !== "string" || typeof documentId !== "string") {
+      res.status(400).json({
+        error: "Invalid parameters",
+      });
+      return;
+    }
+
+    const document = await deleteDocument(
+      knowledgeBaseId,
+      documentId,
+      req.user.id,
+    );
+
+    if (!document) {
+      res.status(404).json({
+        error: "Document not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Document deleted successfully",
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to delete document";
+
     res.status(500).json({
       error: message,
     });

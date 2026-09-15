@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { uploadDocument, getDocuments } from "controllers/document.controller";
+import {
+  uploadDocument,
+  getDocuments,
+  deleteKBDocument,
+} from "controllers/document.controller";
 import { authMiddleware } from "middleware/auth";
 import {
   knowledgeBaseDocumentIdSchema,
@@ -23,6 +27,13 @@ router.get(
   authMiddleware,
   validate(knowledgeBaseDocumentIdSchema),
   getDocuments,
+);
+
+router.delete(
+  "/knowledge-bases/:id/documents/:doc_id",
+  authMiddleware,
+  validate(knowledgeBaseDocumentIdSchema),
+  deleteKBDocument,
 );
 
 export default router;
