@@ -1,5 +1,6 @@
 import DocumentModel from "models/Document";
 import KnowledgeBase from "models/KnowledgeBase";
+import { deleteFile } from "./file.service";
 
 interface CreateDocumentInput {
   name: string;
@@ -83,11 +84,23 @@ const deleteDocument = async (
   documentId: string,
   ownerId: string,
 ) => {
-  return DocumentModel.findOneAndDelete({
+  const document = await DocumentModel.findOne({
     _id: documentId,
     knowledgeBase: knowledgeBaseId,
     owner: ownerId,
   });
+
+  if (!document) {
+    return null;
+  }
+
+  await deleteFile(document.fileUrl);
+
+  await DocumentModel.deleteOne({
+    _id: documentId,
+  });
+
+  return document;
 };
 
 export {
